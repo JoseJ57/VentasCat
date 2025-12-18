@@ -12,7 +12,7 @@ namespace VentasSD.Models
         [Required]
         public DateOnly Fecha { get; set; }
         [Required]
-        public Decimal Monto { get; set; }
+        public Decimal Monto { get; set; } = 999;
         public string? Observacion { get; set; }
         [Required]
         public int IdCliente { get; set; }

@@ -3,6 +3,7 @@
     public enum MetodoPagos
     {
         qr=0,
-        efectivo=1
+        efectivo=1,
+        credito=2,
     }
 }

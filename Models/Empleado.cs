@@ -39,6 +39,9 @@ namespace VentasSD.Models
 
         public ICollection<Orden> Ordenes{ get; set; } = new List<Orden>();
         public ICollection<Inventario> Inventarios{ get; set; } = new List<Inventario>();
+
         public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+    
+
     }
 }
