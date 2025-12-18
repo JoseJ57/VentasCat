@@ -14,10 +14,10 @@ namespace VentasSD.Models
         [ForeignKey("IdTalla")]
         public Talla? Talla { get; set; }
 
-        //[Required]
-        //public int IdTipo { get; set; }
-        //[ForeignKey("IdTipo")]
-        //public Tipo? Tipo { get; set; }
+        [Required]
+        public int IdTipo { get; set; }
+        [ForeignKey("IdTipo")]
+        public Tipo? Tipo { get; set; }
     }
 
 }

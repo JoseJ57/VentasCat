@@ -7,7 +7,7 @@ namespace VentasSD.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int IdTallalArticulo { get; set; }
+        public int IdTallaArticulo { get; set; }
 
         [Required]
         public int IdArticulo { get; set; }

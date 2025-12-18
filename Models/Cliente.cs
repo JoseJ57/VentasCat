@@ -25,9 +25,22 @@ namespace VentasSD.Models
 
         [Required(ErrorMessage = "La fecha de nacimiento es obligatoria.")]
         public DateOnly? FechaNacimiento { get; set; }
+        [Required]
+        public int Nit { get; set; }
+
+        [Required]
+        public bool Frecuente {  get; set; }
+        [Required]
+        [RegularExpression(@"^[0-9\s]+$")]
+        [StringLength(8, ErrorMessage = "no puede tener más de 8 caracteres.")]
+        public string? Celular { get; set; }
 
 
         public ICollection<Orden> Ordenes { get; set; } = new List<Orden>();
+        public ICollection<Credito> Creditos{ get; set; } = new List<Credito>();
+        public int IdUsuario { get; set; }
+        [ForeignKey("IdUsuario")]
+        public Usuario? Usuario { get; set; }
 
     }
 }

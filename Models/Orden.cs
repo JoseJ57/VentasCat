@@ -8,7 +8,7 @@ namespace VentasSD.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int IdOrden { get; set; }
 
         [Required]
         public DateOnly? Fecha { get; set; }
@@ -21,17 +21,23 @@ namespace VentasSD.Models
         [Required]
         public Estados Estado { get; set; }
         [Required]
-        public bool Envio { get; set; }
+        public bool ConEnvio { get; set; }
         // Relaciones
-        //public ICollection<DetalleOrden> DetalleOrdenes { get; set; } = new List<DetalleOrden>();
-        public int IdCliente { get; set; }
-        [ForeignKey("IdCliente")]
-        public Cliente? Cliente { get; set; }
+        public ICollection<DetalleOrden> DetalleOrdenes { get; set; } = new List<DetalleOrden>();
+        public ICollection<TipoPago> TipoPagos{ get; set; } = new List<TipoPago>();
 
-        //[Required]
-        //public int IdEmpleado { get; set; }
-        //[ForeignKey("IdEmpleado")]
-        //public Empleado? Empleado { get; set; }
+        [Required]
+        public int IdUsuario { get; set; }
+        [ForeignKey("IdUsuario")]
+        public Usuario? Usuario { get; set; }
 
+
+        public int IdCredito { get; set; }
+        [ForeignKey("IdCredito")]
+        public Credito? Credito { get; set; }
+        
+        public int IdEnvio { get; set; }
+        [ForeignKey("IdEnvio")]
+        public Envio? Envio { get; set; }
     }
 }

@@ -1,0 +1,92 @@
+﻿/* Centrar todo el contenido del body */
+body {
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #FFF;
+    background-image: url("/imagenes/Logo.PNG");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 2s ease, transform 2s ease;
+}
+
+    .fade-in.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+.form-control, .btn {
+    border-radius: 10px;
+}
+
+.btn-outline-primary {
+    color: #fFF;
+    background-color: #ffa8ff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 100px;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #e12bfb;
+        color: #fff;
+        border-color: #FFF;
+        box-shadow: 0 0 10px 0 #EBF;
+        transition: 0.2s;
+        font-size: 18px;
+    }
+
+/* Contenedor principal centrado vertical y horizontalmente */
+.login-container {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    width: 600px !important;
+    height: 600px;
+    border: solid 1px #ccc;
+    box-shadow: 0 0 10px 0 #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.login-icono {
+    border-radius: 100px;
+    border: none;
+}
+
+#HelluzLogo {
+    width: 400px;
+    height: 400px;
+}
+
+label, h2, p {
+    color: #fff;
+    text-align: center;
+}
+
+p {
+    margin: 10px;
+}
+
+h1 {
+    color: #fff;
+    font-size: 40px;
+    font-family: "Robot",'Sans Serif Collection';
+}
