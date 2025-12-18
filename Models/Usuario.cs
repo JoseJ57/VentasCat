@@ -24,8 +24,13 @@ namespace VentasSD.Models
         [Required]
         public Roles Rol { get; set; }
 
-        public ICollection<Empleado> Empleados{ get; set; } = new List<Empleado>();
-        public ICollection<Cliente> Clientes{ get; set; } = new List<Cliente>();
+        public int IdEmpleado { get; set; }
+        [ForeignKey("IdEmpleado")]
+        public Empleado? Empleado { get; set; }
+
+        public int IdCliente { get; set; }
+        [ForeignKey("IdCliente")]
+        public Cliente? Cliente { get; set; }
 
     }
 }

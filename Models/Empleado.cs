@@ -39,11 +39,6 @@ namespace VentasSD.Models
 
         public ICollection<Orden> Ordenes{ get; set; } = new List<Orden>();
         public ICollection<Inventario> Inventarios{ get; set; } = new List<Inventario>();
-
-        public int IdUsuario { get; set; }
-        [ForeignKey("IdUsuario")]
-        public Usuario? Usuario { get; set; }
-
-
+        public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
     }
 }

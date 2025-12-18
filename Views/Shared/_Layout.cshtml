@@ -26,7 +26,31 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Articulos" asp-action="Index">Articulos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Materiales" asp-action="Index">Materiales</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tipos" asp-action="Index">Tipo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tallas" asp-action="Index">Talla</a>
+                        </li>
                     </ul>
+                    <div class="d-flex">
+                        @*  if(User.IsInRol("Administrador")){*@
+                        @* <span class="navbar-text">@User.Identity.Name-@User.FindFirstValue(ClaimTypes.Role)</span> *@
+                        <form asp-controller="Login" asp-action="Logout" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit">Salir</button>
+                        </form>
+
+
+
+
+                    </div>
                 </div>
             </div>
         </nav>

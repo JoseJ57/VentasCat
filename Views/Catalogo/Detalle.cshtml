@@ -1,0 +1,201 @@
+﻿@model VentasSD.ViewModels.DetalleArticuloViewModel
+
+@{
+    ViewData["Title"] = Model.Articulo.Nombre;
+}
+@{
+    Layout = null;
+}
+<style>
+    .detail-image {
+        width: 100%;
+        max-height: 600px;
+        object-fit: contain;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .detail-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-slogan {
+        font-size: 1.3rem;
+        color: #667eea;
+        font-style: italic;
+        margin-bottom: 1.5rem;
+    }
+
+    .detail-price {
+        font-size: 2.5rem;
+        color: #e91e63;
+        font-weight: bold;
+        margin: 1rem 0;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #667eea;
+        padding-left: 1rem;
+    }
+
+    .info-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        display: inline-block;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+</style>
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Catálogo</a></li>
+            <li class="breadcrumb-item active">@Model.Articulo.Nombre</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Columna Izquierda: Imagen -->
+        <div class="col-md-6">
+            <img src="~/images/articulos/@Model.Articulo.Imagen"
+                 class="detail-image"
+                 alt="@Model.Articulo.Nombre"
+                 onerror="this.src='/images/default.jpg'" />
+        </div>
+
+        <!-- Columna Derecha: Información -->
+        <div class="col-md-6">
+            <h1 class="detail-title">@Model.Articulo.Nombre</h1>
+            <p class="detail-slogan">"@Model.Articulo.Eslogan"</p>
+
+            <div class="mb-3">
+                <span class="info-badge">@Model.Articulo.Marca?.Nombre</span>
+                <span class="info-badge">@Model.Articulo.Tipo?.Nombre</span>
+                <span class="info-badge">@Model.Articulo.Categoria</span>
+            </div>
+
+            <p class="detail-price">Bs. @Model.Articulo.Precio.ToString("N2")</p>
+
+            <!-- Selector de Talla -->
+            @if (Model.TallasDisponibles.Any())
+            {
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Selecciona una talla:</label>
+                    <div>
+                        @foreach (var talla in Model.TallasDisponibles)
+                        {
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="tallaSeleccionada"
+                                       id="talla_@talla.IdTalla"
+                                       value="@talla.IdTalla"
+                                       data-nombre="@talla.Nombre" />
+                                <label class="form-check-label" for="talla_@talla.IdTalla">
+                                    @talla.Nombre
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Materiales -->
+            @if (Model.MaterialesDisponibles.Any())
+            {
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Materiales:</label>
+                    <div>
+                        @foreach (var material in Model.MaterialesDisponibles)
+                        {
+                            <span class="badge bg-secondary me-2">@material.Nombre</span>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Cantidad -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Cantidad:</label>
+                <input type="number" id="cantidad" class="form-control" value="1" min="1" max="99" style="max-width: 100px;" />
+            </div>
+
+            <!-- Botón Agregar al Carrito -->
+            <button class="btn btn-lg w-100 mb-3"
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;"
+                    onclick="agregarAlCarrito()">
+                <i class="bi bi-cart-plus"></i> Agregar al Carrito
+            </button>
+
+            <a asp-action="Index" class="btn btn-outline-secondary w-100">
+                <i class="bi bi-arrow-left"></i> Volver al Catálogo
+            </a>
+        </div>
+    </div>
+
+    <!-- Descripción y Recomendaciones -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="section-title">Descripción</h2>
+            <p class="lead">@Model.Articulo.Descripcion</p>
+
+            <h2 class="section-title">Recomendaciones de Uso</h2>
+            <p class="lead">@Model.Articulo.Recomendaciones</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function agregarAlCarrito() {
+            const cantidad = parseInt($('#cantidad').val());
+            let idTalla = null;
+            let nombreTalla = null;
+
+            // Obtener talla seleccionada si existe
+            const tallaSeleccionada = $('input[name="tallaSeleccionada"]:checked');
+            if (tallaSeleccionada.length > 0) {
+                idTalla = parseInt(tallaSeleccionada.val());
+                nombreTalla = tallaSeleccionada.data('nombre');
+            } else if ($('input[name="tallaSeleccionada"]').length > 0) {
+                alert('Por favor selecciona una talla');
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("Agregar", "Carrito")',
+                type: 'POST',
+                data: {
+                    idArticulo: @Model.Articulo.IdArticulo,
+                    nombre: '@Model.Articulo.Nombre',
+                    imagen: '@Model.Articulo.Imagen',
+                    precio: @Model.Articulo.Precio,
+                    cantidad: cantidad,
+                    idTalla: idTalla,
+                    nombreTalla: nombreTalla
+                },
+                success: function() {
+                    alert('Producto agregado al carrito');
+                    actualizarContadorCarrito();
+                }
+            });
+        }
+
+        function actualizarContadorCarrito() {
+            $.get('@Url.Action("ObtenerCantidad", "Carrito")', function(data) {
+                $('#carrito-cantidad').text(data.cantidad);
+            });
+        }
+    </script>
+}

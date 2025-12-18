@@ -27,6 +27,11 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    <form asp-controller="Login" asp-action="Logout" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit">Salir</button>
+                    </form>
+
                 </div>
             </div>
         </nav>
