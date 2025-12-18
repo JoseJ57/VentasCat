@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VentasSD.Contexto;
 
@@ -10,9 +11,11 @@ using VentasSD.Contexto;
 namespace VentasSD.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20251218035643_usuarionullable")]
+    partial class usuarionullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.11");
@@ -103,6 +106,9 @@ namespace VentasSD.Migrations
                     b.Property<bool>("Frecuente")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("IdUsuario")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Nit")
                         .HasColumnType("INTEGER");
 
@@ -112,6 +118,8 @@ namespace VentasSD.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("IdCliente");
+
+                    b.HasIndex("IdUsuario");
 
                     b.ToTable("Clientes");
                 });
@@ -205,6 +213,9 @@ namespace VentasSD.Migrations
                     b.Property<DateOnly>("FechaNacimiento")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("IdUsuario")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -214,6 +225,8 @@ namespace VentasSD.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("IdEmpleado");
+
+                    b.HasIndex("IdUsuario");
 
                     b.ToTable("Empleados");
                 });
@@ -561,12 +574,6 @@ namespace VentasSD.Migrations
                     b.Property<bool>("Estado")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("IdCliente")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("IdEmpleado")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("NombreUsuario")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -581,10 +588,6 @@ namespace VentasSD.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("IdUsuario");
-
-                    b.HasIndex("IdCliente");
-
-                    b.HasIndex("IdEmpleado");
 
                     b.ToTable("Usuarios");
                 });
@@ -606,6 +609,15 @@ namespace VentasSD.Migrations
                     b.Navigation("Marca");
 
                     b.Navigation("Tipo");
+                });
+
+            modelBuilder.Entity("VentasSD.Models.Cliente", b =>
+                {
+                    b.HasOne("VentasSD.Models.Usuario", "Usuario")
+                        .WithMany("Clientes")
+                        .HasForeignKey("IdUsuario");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("VentasSD.Models.Credito", b =>
@@ -636,6 +648,17 @@ namespace VentasSD.Migrations
                     b.Navigation("Articulo");
 
                     b.Navigation("Orden");
+                });
+
+            modelBuilder.Entity("VentasSD.Models.Empleado", b =>
+                {
+                    b.HasOne("VentasSD.Models.Usuario", "Usuario")
+                        .WithMany("Empleados")
+                        .HasForeignKey("IdUsuario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("VentasSD.Models.Envio", b =>
@@ -798,25 +821,6 @@ namespace VentasSD.Migrations
                     b.Navigation("Orden");
                 });
 
-            modelBuilder.Entity("VentasSD.Models.Usuario", b =>
-                {
-                    b.HasOne("VentasSD.Models.Cliente", "Cliente")
-                        .WithMany("Usuarios")
-                        .HasForeignKey("IdCliente")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VentasSD.Models.Empleado", "Empleado")
-                        .WithMany("Usuarios")
-                        .HasForeignKey("IdEmpleado")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cliente");
-
-                    b.Navigation("Empleado");
-                });
-
             modelBuilder.Entity("VentasSD.Models.Articulo", b =>
                 {
                     b.Navigation("DetallaOrdenes");
@@ -833,8 +837,6 @@ namespace VentasSD.Migrations
                     b.Navigation("Creditos");
 
                     b.Navigation("Ordenes");
-
-                    b.Navigation("Usuarios");
                 });
 
             modelBuilder.Entity("VentasSD.Models.Credito", b =>
@@ -854,8 +856,6 @@ namespace VentasSD.Migrations
                     b.Navigation("Inventarios");
 
                     b.Navigation("Ordenes");
-
-                    b.Navigation("Usuarios");
                 });
 
             modelBuilder.Entity("VentasSD.Models.Envio", b =>
@@ -901,6 +901,13 @@ namespace VentasSD.Migrations
             modelBuilder.Entity("VentasSD.Models.Transporte", b =>
                 {
                     b.Navigation("Envios");
+                });
+
+            modelBuilder.Entity("VentasSD.Models.Usuario", b =>
+                {
+                    b.Navigation("Clientes");
+
+                    b.Navigation("Empleados");
                 });
 #pragma warning restore 612, 618
         }
