@@ -33,14 +33,21 @@ namespace VentasSD.Controllers
 
         public IActionResult Index()
         {
-            // Si ya está autenticado, redirigir a Home
-            if (User.Identity != null && User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            //if (User.Identity != null && User.Identity.IsAuthenticated)
+            //{
+            //    if (User.IsInRole("Administrador"))
+            //        return RedirectToAction("Index", "VistaAdministrador");
+
+            //    if (User.IsInRole("Vendedor"))
+            //        return RedirectToAction("Index", "VistaVendedor");
+
+            //    return RedirectToAction("Index", "VistaCliente");
+            //}
 
             return View();
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken] // ⭐ Seguridad adicional
@@ -81,12 +88,23 @@ namespace VentasSD.Controllers
 
                 return View("Index");
             }
-
-            // Autenticación exitosa: eliminar entrada del cache
-            _cache.Remove(cacheKey);
-            await SetUserCookie(usuario);
-
-            return RedirectToAction("Index", "Home");
+            
+            else
+            {// Autenticación exitosa: eliminar entrada del cache
+                _cache.Remove(cacheKey);
+                await SetUserCookie(usuario);
+                if (usuario.Rol == Dto.Roles.Administrador)
+                {
+                    return RedirectToAction("Index", "VistaAdministrador"); //dir carrera
+                }
+                else if (usuario.Rol==Dto.Roles.Vendedor) {
+                    return RedirectToAction("Index", "VistaVendedor");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "VistaCliente"); //jefe lab
+                }
+            }
         }
 
         private async Task SetUserCookie(Usuario usuario)
@@ -124,14 +142,16 @@ namespace VentasSD.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             // Limpiar sesión
-            HttpContext.Session.Clear();
 
             // ⭐ Headers para prevenir caché
-            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
-            Response.Headers["Pragma"] = "no-cache";
-            Response.Headers["Expires"] = "0";
+           await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            return RedirectToAction("Index", "Login");
+Response.Headers["Cache-Control"] = "no-store";
+Response.Headers["Pragma"] = "no-cache";
+Response.Headers["Expires"] = "0";
+
+return RedirectToAction("Index", "Login");
+
         }
 
         // ⭐ Método auxiliar para verificar sesión (opcional)

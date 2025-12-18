@@ -2,7 +2,7 @@
 {
     public enum EstadoArticulos
     {
-        agotado=0,
-        disponible=2
+        Agotado=0,
+        Disponible=2
     }
 }

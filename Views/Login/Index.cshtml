@@ -15,12 +15,7 @@
 </head>
 <body>
     <!-- ⭐ Si ya está autenticado, redirigir -->
-    @if (User.Identity.IsAuthenticated)
-    {
-        <script>
-            window.location.href = '@(User.IsInRole("administrador") ? Url.Action("Index", "Home") : Url.Action("Index", "Instructor"))';
-        </script>
-    }
+   
 
     <form asp-controller="Login" asp-action="Login" method="post" class="w-75 fade-in login-container" id="login-form">
         <div class="text-center mb-4">

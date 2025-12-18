@@ -1,0 +1,199 @@
+﻿@model VentasSD.ViewModels.CatalogoViewModel
+
+@{
+    ViewData["Title"] = "Catálogo de Productos";
+}
+@{
+    Layout = null;
+}
+<style>
+    .product-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        cursor: pointer;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .product-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+    .product-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+        margin-top: 10px;
+        min-height: 50px;
+    }
+    .product-price {
+        font-size: 1.4rem;
+        color: #e91e63;
+        font-weight: bold;
+    }
+    .navbar-tipos {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .tipo-link {
+        color: white !important;
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        margin: 0 0.3rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .tipo-link:hover, .tipo-link.active {
+        background: rgba(255,255,255,0.2);
+        transform: scale(1.05);
+    }
+    .search-bar {
+        max-width: 600px;
+        margin: 0 auto 2rem;
+    }
+    .btn-add-cart {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+    .btn-add-cart:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+</style>
+
+<!-- Navbar de Tipos -->
+<nav class="navbar-tipos">
+    <div class="container">
+        <div class="d-flex justify-content-center flex-wrap">
+            <a href="@Url.Action("Index", "Catalogo")"
+               class="tipo-link @(Model.TipoSeleccionado == null ? "active" : "")">
+                Todos
+            </a>
+            @foreach (var tipo in Model.Tipos)
+            {
+                <a href="@Url.Action("Index", "Catalogo", new { idTipo = tipo.IdTipo })"
+                   class="tipo-link @(Model.TipoSeleccionado == tipo.IdTipo ? "active" : "")">
+                    @tipo.Nombre
+                </a>
+            }
+            <div>
+                <a href="@Url.Action("Index", "Login")" class="btn btn-primary btn-lg me-3">Ingresar al Sistema</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Barra de búsqueda -->
+    <div class="search-bar">
+        <form asp-action="Index" method="get" class="d-flex">
+            <input type="hidden" name="idTipo" value="@Model.TipoSeleccionado" />
+            <input type="text"
+                   name="busqueda"
+                   value="@Model.BusquedaTexto"
+                   class="form-control me-2"
+                   placeholder="Buscar productos..." />
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Buscar
+            </button>
+        </form>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Resultados -->
+    @if (!Model.Articulos.Any())
+    {
+        <div class="alert alert-info text-center">
+            <h4>No se encontraron productos</h4>
+            <p>Intenta con otros filtros o búsqueda</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var articulo in Model.Articulos)
+            {
+                <div class="col">
+                    <div class="card product-card" onclick="window.location='@Url.Action("Detalle", "Catalogo", new { id = articulo.IdArticulo })'">
+                        <img src="~/images/articulos/@articulo.Imagen"
+                             class="card-img-top product-image"
+                             alt="@articulo.Nombre"
+                             onerror="this.src='/images/default.jpg'" />
+                        <div class="card-body text-center">
+                            <h5 class="product-name">@articulo.Nombre</h5>
+                            <p class="text-muted mb-2">@articulo.Marca?.Nombre</p>
+                            <p class="product-price">Bs. @articulo.Precio.ToString("N2")</p>
+                            <button class="btn btn-add-cart w-100"
+                                    onclick="event.stopPropagation(); agregarAlCarrito(@articulo.IdArticulo, '@articulo.Nombre', '@articulo.Imagen', @articulo.Precio)">
+                                <i class="bi bi-cart-plus"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function agregarAlCarrito(id, nombre, imagen, precio) {
+            $.ajax({
+                url: '@Url.Action("Agregar", "Carrito")',
+                type: 'POST',
+                data: {
+                    idArticulo: id,
+                    nombre: nombre,
+                    imagen: imagen,
+                    precio: precio,
+                    cantidad: 1
+                },
+                success: function() {
+                    actualizarContadorCarrito();
+                    // Mostrar notificación
+                    const toast = `
+                        <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+                            <div class="toast show" role="alert">
+                                <div class="toast-header bg-success text-white">
+                                    <strong class="me-auto">¡Éxito!</strong>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                                </div>
+                                <div class="toast-body">
+                                    Producto agregado al carrito
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    $('body').append(toast);
+                    setTimeout(() => $('.toast').fadeOut(), 3000);
+                }
+            });
+        }
+
+        function actualizarContadorCarrito() {
+            $.get('@Url.Action("ObtenerCantidad", "Carrito")', function(data) {
+                $('#carrito-cantidad').text(data.cantidad);
+            });
+        }
+
+        $(document).ready(function() {
+            actualizarContadorCarrito();
+        });
+    </script>
+}

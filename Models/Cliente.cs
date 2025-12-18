@@ -38,8 +38,8 @@ namespace VentasSD.Models
 
         public ICollection<Orden> Ordenes { get; set; } = new List<Orden>();
         public ICollection<Credito> Creditos{ get; set; } = new List<Credito>();
+        public ICollection<Usuario> Usuarios{ get; set; } = new List<Usuario>();
 
-        public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
         
 
     }

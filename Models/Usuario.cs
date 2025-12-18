@@ -31,7 +31,6 @@ namespace VentasSD.Models
         public int IdCliente { get; set; }
         [ForeignKey("IdCliente")]
         public Cliente? Cliente { get; set; }
-      
 
     }
 }
