@@ -338,9 +338,10 @@ namespace VentasSD.Migrations
 
                     b.HasKey("IdMaterialArticulo");
 
-                    b.HasIndex("IdArticulo");
-
                     b.HasIndex("IdMaterial");
+
+                    b.HasIndex("IdArticulo", "IdMaterial")
+                        .IsUnique();
 
                     b.ToTable("MaterialArticulos");
                 });
@@ -425,9 +426,10 @@ namespace VentasSD.Migrations
 
                     b.HasKey("IdTallaArticulo");
 
-                    b.HasIndex("IdArticulo");
-
                     b.HasIndex("IdTalla");
+
+                    b.HasIndex("IdArticulo", "IdTalla")
+                        .IsUnique();
 
                     b.ToTable("TallaArticulos");
                 });
@@ -446,9 +448,10 @@ namespace VentasSD.Migrations
 
                     b.HasKey("IdTallaTipo");
 
-                    b.HasIndex("IdTalla");
-
                     b.HasIndex("IdTipo");
+
+                    b.HasIndex("IdTalla", "IdTipo")
+                        .IsUnique();
 
                     b.ToTable("TallaTipos");
                 });
@@ -482,9 +485,10 @@ namespace VentasSD.Migrations
 
                     b.HasKey("IdTipoMaterial");
 
-                    b.HasIndex("IdMaterial");
-
                     b.HasIndex("IdTipo");
+
+                    b.HasIndex("IdMaterial", "IdTipo")
+                        .IsUnique();
 
                     b.ToTable("TipoMateriales");
                 });
@@ -561,10 +565,10 @@ namespace VentasSD.Migrations
                     b.Property<bool>("Estado")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("IdCliente")
+                    b.Property<int?>("IdCliente")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("IdEmpleado")
+                    b.Property<int?>("IdEmpleado")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("NombreUsuario")
@@ -802,15 +806,11 @@ namespace VentasSD.Migrations
                 {
                     b.HasOne("VentasSD.Models.Cliente", "Cliente")
                         .WithMany("Usuarios")
-                        .HasForeignKey("IdCliente")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdCliente");
 
                     b.HasOne("VentasSD.Models.Empleado", "Empleado")
                         .WithMany("Usuarios")
-                        .HasForeignKey("IdEmpleado")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdEmpleado");
 
                     b.Navigation("Cliente");
 

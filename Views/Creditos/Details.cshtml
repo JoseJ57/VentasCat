@@ -1,4 +1,14 @@
 ﻿@model VentasSD.Models.Credito
+@{
+    if (User.IsInRole("Administrador"))
+    {
+        Layout = "~/Views/Shared/_LayoutAdministrador.cshtml";
+    }
+    else if (User.IsInRole("Vendedor"))
+    {
+        Layout = "~/Views/Shared/_LayoutVendedor.cshtml";
+    }
+}
 
 @{
     ViewData["Title"] = "Details";

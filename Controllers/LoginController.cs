@@ -33,16 +33,16 @@ namespace VentasSD.Controllers
 
         public IActionResult Index()
         {
-            //if (User.Identity != null && User.Identity.IsAuthenticated)
-            //{
-            //    if (User.IsInRole("Administrador"))
-            //        return RedirectToAction("Index", "VistaAdministrador");
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Administrador"))
+                    return RedirectToAction("Index", "VistaAdministrador");
 
-            //    if (User.IsInRole("Vendedor"))
-            //        return RedirectToAction("Index", "VistaVendedor");
+                if (User.IsInRole("Vendedor"))
+                    return RedirectToAction("Index", "VistaVendedor");
 
-            //    return RedirectToAction("Index", "VistaCliente");
-            //}
+                return RedirectToAction("Index", "VistaCliente");
+            }
 
             return View();
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,6 +12,8 @@ using VentasSD.ViewModels;
 
 namespace VentasSD.Controllers
 {
+    [Authorize(Roles = "Administrador")]
+
     public class TallasController : Controller
     {
         private readonly MyContext _context;

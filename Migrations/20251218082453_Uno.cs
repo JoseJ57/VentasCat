@@ -6,11 +6,50 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VentasSD.Migrations
 {
     /// <inheritdoc />
-    public partial class unoyeiiii : Migration
+    public partial class Uno : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Clientes",
+                columns: table => new
+                {
+                    IdCliente = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Nombre = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
+                    Apellido = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
+                    Carnet = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
+                    FechaNacimiento = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    Nit = table.Column<int>(type: "INTEGER", nullable: false),
+                    Frecuente = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Celular = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clientes", x => x.IdCliente);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Empleados",
+                columns: table => new
+                {
+                    IdEmpleado = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Nombre = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
+                    Apellido = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
+                    Celular = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
+                    Carnet = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
+                    Cargo = table.Column<int>(type: "INTEGER", nullable: false),
+                    Sueldo = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Estado = table.Column<bool>(type: "INTEGER", nullable: false),
+                    FechaNacimiento = table.Column<DateOnly>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Empleados", x => x.IdEmpleado);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Marcas",
                 columns: table => new
@@ -81,6 +120,28 @@ namespace VentasSD.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Creditos",
+                columns: table => new
+                {
+                    IdCredito = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Fecha = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    Monto = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Observacion = table.Column<string>(type: "TEXT", nullable: true),
+                    IdCliente = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Creditos", x => x.IdCredito);
+                    table.ForeignKey(
+                        name: "FK_Creditos_Clientes_IdCliente",
+                        column: x => x.IdCliente,
+                        principalTable: "Clientes",
+                        principalColumn: "IdCliente",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Usuarios",
                 columns: table => new
                 {
@@ -89,11 +150,23 @@ namespace VentasSD.Migrations
                     NombreUsuario = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
                     Password = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     Estado = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Rol = table.Column<int>(type: "INTEGER", nullable: false)
+                    Rol = table.Column<int>(type: "INTEGER", nullable: false),
+                    IdEmpleado = table.Column<int>(type: "INTEGER", nullable: true),
+                    IdCliente = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.IdUsuario);
+                    table.ForeignKey(
+                        name: "FK_Usuarios_Clientes_IdCliente",
+                        column: x => x.IdCliente,
+                        principalTable: "Clientes",
+                        principalColumn: "IdCliente");
+                    table.ForeignKey(
+                        name: "FK_Usuarios_Empleados_IdEmpleado",
+                        column: x => x.IdEmpleado,
+                        principalTable: "Empleados",
+                        principalColumn: "IdEmpleado");
                 });
 
             migrationBuilder.CreateTable(
@@ -208,59 +281,6 @@ namespace VentasSD.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Clientes",
-                columns: table => new
-                {
-                    IdCliente = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
-                    Apellido = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
-                    Carnet = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
-                    FechaNacimiento = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    Nit = table.Column<int>(type: "INTEGER", nullable: false),
-                    Frecuente = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Celular = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
-                    IdUsuario = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clientes", x => x.IdCliente);
-                    table.ForeignKey(
-                        name: "FK_Clientes_Usuarios_IdUsuario",
-                        column: x => x.IdUsuario,
-                        principalTable: "Usuarios",
-                        principalColumn: "IdUsuario",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Empleados",
-                columns: table => new
-                {
-                    IdEmpleado = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
-                    Apellido = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
-                    Celular = table.Column<string>(type: "TEXT", maxLength: 8, nullable: false),
-                    Carnet = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
-                    Cargo = table.Column<int>(type: "INTEGER", nullable: false),
-                    Sueldo = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Estado = table.Column<bool>(type: "INTEGER", nullable: false),
-                    FechaNacimiento = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    IdUsuario = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Empleados", x => x.IdEmpleado);
-                    table.ForeignKey(
-                        name: "FK_Empleados_Usuarios_IdUsuario",
-                        column: x => x.IdUsuario,
-                        principalTable: "Usuarios",
-                        principalColumn: "IdUsuario",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MaterialArticulos",
                 columns: table => new
                 {
@@ -309,28 +329,6 @@ namespace VentasSD.Migrations
                         column: x => x.IdTalla,
                         principalTable: "Tallas",
                         principalColumn: "IdTalla",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Creditos",
-                columns: table => new
-                {
-                    IdCredito = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Fecha = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    Monto = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Observacion = table.Column<string>(type: "TEXT", nullable: true),
-                    IdCliente = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Creditos", x => x.IdCredito);
-                    table.ForeignKey(
-                        name: "FK_Creditos_Clientes_IdCliente",
-                        column: x => x.IdCliente,
-                        principalTable: "Clientes",
-                        principalColumn: "IdCliente",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -490,11 +488,6 @@ namespace VentasSD.Migrations
                 column: "IdTipo");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clientes_IdUsuario",
-                table: "Clientes",
-                column: "IdUsuario");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Creditos_IdCliente",
                 table: "Creditos",
                 column: "IdCliente");
@@ -508,11 +501,6 @@ namespace VentasSD.Migrations
                 name: "IX_DetalleOrdenes_IdOrden",
                 table: "DetalleOrdenes",
                 column: "IdOrden");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Empleados_IdUsuario",
-                table: "Empleados",
-                column: "IdUsuario");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Envios_IdTransporte",
@@ -535,9 +523,10 @@ namespace VentasSD.Migrations
                 column: "IdArticulo");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MaterialArticulos_IdArticulo",
+                name: "IX_MaterialArticulos_IdArticulo_IdMaterial",
                 table: "MaterialArticulos",
-                column: "IdArticulo");
+                columns: new[] { "IdArticulo", "IdMaterial" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MaterialArticulos_IdMaterial",
@@ -570,9 +559,10 @@ namespace VentasSD.Migrations
                 column: "IdUsuario");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TallaArticulos_IdArticulo",
+                name: "IX_TallaArticulos_IdArticulo_IdTalla",
                 table: "TallaArticulos",
-                column: "IdArticulo");
+                columns: new[] { "IdArticulo", "IdTalla" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TallaArticulos_IdTalla",
@@ -580,9 +570,10 @@ namespace VentasSD.Migrations
                 column: "IdTalla");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TallaTipos_IdTalla",
+                name: "IX_TallaTipos_IdTalla_IdTipo",
                 table: "TallaTipos",
-                column: "IdTalla");
+                columns: new[] { "IdTalla", "IdTipo" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TallaTipos_IdTipo",
@@ -590,9 +581,10 @@ namespace VentasSD.Migrations
                 column: "IdTipo");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TipoMateriales_IdMaterial",
+                name: "IX_TipoMateriales_IdMaterial_IdTipo",
                 table: "TipoMateriales",
-                column: "IdMaterial");
+                columns: new[] { "IdMaterial", "IdTipo" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TipoMateriales_IdTipo",
@@ -608,6 +600,16 @@ namespace VentasSD.Migrations
                 name: "IX_TipoPagos_IdOrden",
                 table: "TipoPagos",
                 column: "IdOrden");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_IdCliente",
+                table: "Usuarios",
+                column: "IdCliente");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_IdEmpleado",
+                table: "Usuarios",
+                column: "IdEmpleado");
         }
 
         /// <inheritdoc />
@@ -656,19 +658,19 @@ namespace VentasSD.Migrations
                 name: "Creditos");
 
             migrationBuilder.DropTable(
-                name: "Empleados");
-
-            migrationBuilder.DropTable(
                 name: "Envios");
 
             migrationBuilder.DropTable(
-                name: "Clientes");
+                name: "Usuarios");
 
             migrationBuilder.DropTable(
                 name: "Transportes");
 
             migrationBuilder.DropTable(
-                name: "Usuarios");
+                name: "Clientes");
+
+            migrationBuilder.DropTable(
+                name: "Empleados");
         }
     }
 }

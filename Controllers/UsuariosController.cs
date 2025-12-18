@@ -12,7 +12,7 @@ using VentasSD.Models;
 
 namespace VentasSD.Controllers
 {
-    //[Authorize(Roles = "administrador")]
+    [Authorize(Roles = "Administrador")]
 
     public class UsuariosController : Controller
     {
@@ -48,50 +48,73 @@ namespace VentasSD.Controllers
         }
 
         // GET: Usuarios/Create
-        
+
         public IActionResult Create()
         {
             ViewBag.Roles = new SelectList(
-               Enum.GetValues(typeof(Roles))
-                   .Cast<Roles>()
-                   .Select(r => new { Id = (int)r, Nombre = r.ToString() }),
-               "Id", "Nombre");
+                Enum.GetValues(typeof(Roles))
+                    .Cast<Roles>()
+                    .Select(r => new { Id = r, Nombre = r.ToString() }),
+                "Id", "Nombre");
+
+            ViewBag.Empleados = new SelectList(
+                _context.Empleados,
+                "IdEmpleado",
+                "Nombre");   // 👈 esta propiedad DEBE existir
+
+            ViewBag.Clientes = new SelectList(
+                _context.Clientes,
+                "IdCliente",
+                "Nombre");   // 👈 esta propiedad DEBE existir
 
             return View();
-
         }
+
 
         // POST: Usuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdUsuario,NombreUsuario,Password,Estado,Rol")] Usuario usuario)
+        public async Task<IActionResult> Create(
+     [Bind("IdUsuario,NombreUsuario,Password,Estado,Rol,IdEmpleado,IdCliente")]
+    Usuario usuario)
         {
-
-            if (ModelState.IsValid)
+            // 🔐 Validaciones
+            if (usuario.IdEmpleado == null && usuario.IdCliente == null)
             {
-               
-                // Asignar estado automáticamente
-                usuario.Estado = true;
-
-                _context.Usuarios.Add(usuario);
-                await _context.SaveChangesAsync();
-
-                TempData["Exito"] = "Usuario creado exitosamente";
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("", "Debe seleccionar un Empleado o un Cliente.");
             }
 
-            // Recargar roles si hay error
-            ViewBag.Roles = new SelectList(
-                Enum.GetValues(typeof(Roles))
-                    .Cast<Roles>()
-                    .Select(r => new { Id = (int)r, Nombre = r.ToString() }),
-                "Id", "Nombre");
+            if (usuario.IdEmpleado != null && usuario.IdCliente != null)
+            {
+                ModelState.AddModelError("", "No puede asignar Cliente y Empleado al mismo tiempo.");
+            }
 
-            return View(usuario);
+            if (!ModelState.IsValid)
+            {
+                // 🔴 SIEMPRE recargar combos
+                ViewBag.Roles = new SelectList(
+                    Enum.GetValues(typeof(Roles))
+                        .Cast<Roles>()
+                        .Select(r => new { Id = r, Nombre = r.ToString() }),
+                    "Id", "Nombre");
 
+                ViewBag.Empleados = new SelectList(_context.Empleados, "IdEmpleado", "Nombre");
+                ViewBag.Clientes = new SelectList(_context.Clientes, "IdCliente", "Nombre");
+
+                return View(usuario);
+            }
+
+            usuario.Estado = true;
+
+            _context.Usuarios.Add(usuario);
+            await _context.SaveChangesAsync();
+
+            TempData["Exito"] = "Usuario creado exitosamente";
+            return RedirectToAction(nameof(Index));
         }
+
 
         // POST: Usuarios/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.

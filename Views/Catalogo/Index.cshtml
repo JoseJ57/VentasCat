@@ -3,72 +3,13 @@
 @{
     ViewData["Title"] = "Catálogo de Productos";
 }
-@{
+@* @{
     Layout = null;
-}
-<style>
-    .product-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        height: 100%;
-        cursor: pointer;
-    }
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }
-    .product-image {
-        width: 100%;
-        height: 300px;
-        object-fit: cover;
-    }
-    .product-name {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #333;
-        margin-top: 10px;
-        min-height: 50px;
-    }
-    .product-price {
-        font-size: 1.4rem;
-        color: #e91e63;
-        font-weight: bold;
-    }
-    .navbar-tipos {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 1rem 0;
-        margin-bottom: 2rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    .tipo-link {
-        color: white !important;
-        padding: 0.5rem 1.5rem;
-        border-radius: 25px;
-        margin: 0 0.3rem;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-    }
-    .tipo-link:hover, .tipo-link.active {
-        background: rgba(255,255,255,0.2);
-        transform: scale(1.05);
-    }
-    .search-bar {
-        max-width: 600px;
-        margin: 0 auto 2rem;
-    }
-    .btn-add-cart {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        color: white;
-        padding: 0.5rem 1.5rem;
-        border-radius: 25px;
-        transition: all 0.3s ease;
-    }
-    .btn-add-cart:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    }
-</style>
+} *@
+<head>
+    <link href="~/css/Catalogo.css" rel="stylesheet" />
+</head>
+
 
 <!-- Navbar de Tipos -->
 <nav class="navbar-tipos">

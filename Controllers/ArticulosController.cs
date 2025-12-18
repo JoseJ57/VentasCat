@@ -4,9 +4,13 @@ using VentasSD.Models;
 using VentasSD.ViewModels;
 using VentasSD.Dto;
 using VentasSD.Contexto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VentasSD.Controllers
 {
+    [Authorize(Roles = "Administrador")]
+
+
     public class ArticulosController : Controller
     {
         private readonly MyContext _context;

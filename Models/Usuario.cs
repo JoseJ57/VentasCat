@@ -24,12 +24,12 @@ namespace VentasSD.Models
         [Required]
         public Roles Rol { get; set; }
 
-        public int IdEmpleado { get; set; }
-        [ForeignKey("IdEmpleado")]
+        public int? IdEmpleado { get; set; }
+        [ForeignKey(nameof(IdEmpleado))]
         public Empleado? Empleado { get; set; }
 
-        public int IdCliente { get; set; }
-        [ForeignKey("IdCliente")]
+        public int? IdCliente { get; set; }
+        [ForeignKey(nameof(IdCliente))]
         public Cliente? Cliente { get; set; }
 
     }

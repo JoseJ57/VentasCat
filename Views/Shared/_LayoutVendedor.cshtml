@@ -13,18 +13,30 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VentasSD</a>
+                <a asp-area="" asp-controller="VistaVendedor" asp-action="Index"> <img class="imagen" src="~/imagenes/Logo.png" alt="Alternate Text" /></a>
+
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Sweet Dream</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        
+                       <li>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="VistaCliente" asp-action="Index">Home</a>
+                            </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Ordenes" asp-action="Privacy">Ordenes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Clientes" asp-action="Privacy">Clientes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Envios" asp-action="Privacy">Envios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Transportes" asp-action="Privacy">Transportes</a>
                         </li>
                     </ul>
                     <form asp-controller="Login" asp-action="Logout" method="post">
